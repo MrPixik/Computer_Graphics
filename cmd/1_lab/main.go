@@ -7,8 +7,8 @@ import (
 )
 
 func grayRoundImage() {
-	var originFilename = "..\\..\\static\\images\\1 lab\\apple.jpeg"
-	var outputFilename = "..\\..\\static\\images\\1 lab\\gray_apple.jpeg"
+	var originFilename = "..\\..\\static\\images\\1_lab\\apple.jpeg"
+	var outputFilename = "..\\..\\static\\images\\1_lab\\gray_apple.jpeg"
 
 	//Reading origin image
 	originImg := gocv.IMRead(originFilename, gocv.IMReadColor)
@@ -59,9 +59,9 @@ func grayRoundImage() {
 }
 
 func blending(alpha float64) {
-	var originFilename1 = "..\\..\\static\\images\\1 lab\\blending1.png"
-	var originFilename2 = "..\\..\\static\\images\\1 lab\\blending2.png"
-	var outputFilename = "..\\..\\static\\images\\1 lab\\blending_result.png"
+	var originFilename1 = "..\\..\\static\\images\\1_lab\\blending1.png"
+	var originFilename2 = "..\\..\\static\\images\\1_lab\\blending2.png"
+	var outputFilename = "..\\..\\static\\images\\1_lab\\blending_result.png"
 
 	//Reading origin images
 	originImg1 := gocv.IMRead(originFilename1, gocv.IMReadColor)
