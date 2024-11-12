@@ -52,17 +52,6 @@ func ditheringTo1bpp(pixVal uint8) (uint8, int) {
 	} else {
 		return 255, 0
 	}
-	//if pixVal <= 31 {
-	//	return 0, 0 - pixVal
-	//} else if pixVal <= 95 {
-	//	return 63, 63 - pixVal
-	//} else if pixVal <= 159 {
-	//	return 127, 127 - pixVal
-	//} else if pixVal <= 223 {
-	//	return 191, 191 - pixVal
-	//} else {
-	//	return 255, 255 - pixVal
-	//}
 }
 func ditheringTo2bpp(pixVal uint8) (uint8, int) {
 	if pixVal <= 0 {
@@ -82,7 +71,7 @@ func ditheringTo2bpp(pixVal uint8) (uint8, int) {
 	}
 }
 
-// clamp ограничивает значение value в пределах от 0 до 255
+// clamp limiting value to interval [0,255]
 func clamp(value int) uint8 {
 	if value < 0 {
 		return 0
@@ -112,7 +101,6 @@ func ditheringFloydSteinberg() {
 	for y := 0; y < height; y++ {
 		for x := 0; x < wigth; x++ {
 			index := wigth*y + x
-			fmt.Println(y)
 			currPixVal := processingData[index]
 			currPixValResult, err := ditheringTo2bpp(currPixVal)
 			if (x < wigth-1) && (y < height-1) && (x > 0) {
