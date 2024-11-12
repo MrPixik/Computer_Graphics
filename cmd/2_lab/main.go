@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"gocv.io/x/gocv"
+	"math"
 )
 
 func rgb2Grayscale(originImg gocv.Mat) gocv.Mat {
@@ -59,7 +59,7 @@ func ditheringTo2bpp(pixVal uint8) (uint8, int) {
 	} else if pixVal <= 31 {
 		return 0, int(pixVal)
 	} else if pixVal <= 95 {
-		return 63, int(pixVal) - 63
+		return 85, int(pixVal) - 63
 	} else if pixVal <= 159 {
 		return 127, int(pixVal) - 127
 	} else if pixVal <= 223 {
@@ -69,6 +69,37 @@ func ditheringTo2bpp(pixVal uint8) (uint8, int) {
 	} else {
 		return 255, 0
 	}
+}
+func ditheringToNbpp(pixVal uint8, n float64) (uint8, int) {
+	// Число точек квантования
+	numPoints := math.Pow(2, n) - 1
+	step := int(255 / numPoints)
+	halfStep := uint8(step / 2)
+	intervalSlice := []uint8{}
+
+	// Создание интервалов квантования
+	for i := 0; i <= 255; i += step {
+		intervalSlice = append(intervalSlice, uint8(i))
+	}
+
+	// Нахождение интервала, к которому принадлежит значение пикселя
+	for i := 0; i < len(intervalSlice)-1; i++ {
+		low := intervalSlice[i]
+		high := intervalSlice[i+1]
+
+		// Проверка, в какой интервал попадает пиксель
+		if pixVal >= low && pixVal < high {
+			quantizedVal := low
+			if pixVal-low > halfStep {
+				quantizedVal = high
+			}
+			err := int(pixVal) - int(quantizedVal)
+			return quantizedVal, err
+		}
+	}
+
+	// Если пиксель равен 255, возвращаем верхний предел
+	return 255, 0
 }
 
 // clamp limiting value to interval [0,255]
@@ -92,7 +123,6 @@ func ditheringFloydSteinberg() {
 
 	wigth := originImg.Cols()
 	height := originImg.Rows()
-	fmt.Println(wigth, height)
 	grayImg := rgb2Grayscale(originImg)
 	defer grayImg.Close()
 
@@ -102,7 +132,7 @@ func ditheringFloydSteinberg() {
 		for x := 0; x < wigth; x++ {
 			index := wigth*y + x
 			currPixVal := processingData[index]
-			currPixValResult, err := ditheringTo2bpp(currPixVal)
+			currPixValResult, err := ditheringToNbpp(currPixVal, 2)
 			if (x < wigth-1) && (y < height-1) && (x > 0) {
 				processingData[index] = currPixValResult
 				processingData[index+1] += clamp((7 * err) / 16)
