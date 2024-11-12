@@ -20,7 +20,8 @@ func grayRoundImage() {
 	channels := originImg.Channels() //num of colour channels
 
 	//Circle data
-	rad := float64(400)
+	radSquare := math.Pow(float64(min(wigth, height))/2, 2)
+
 	centerX := wigth / 2
 	centerY := height / 2
 
@@ -35,7 +36,9 @@ func grayRoundImage() {
 			index := (y*wigth + x) * channels
 			grayIndex := y*wigth + x
 
-			if math.Sqrt(math.Pow(float64(centerX-x), 2)+math.Pow(float64(centerY-y), 2)) <= rad {
+			//test := math.Pow(float64(centerX-x), 2) + math.Pow(float64(centerY-y), 2)
+			//fmt.Println(test)
+			if math.Pow(float64(centerX-x), 2)+math.Pow(float64(centerY-y), 2) <= radSquare {
 				blue := processingImage[index]
 				red := processingImage[index+1]
 				green := processingImage[index+2]
