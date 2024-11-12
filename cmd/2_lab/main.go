@@ -42,34 +42,6 @@ func rgb2Grayscale(originImg gocv.Mat) gocv.Mat {
 	return grayImage
 }
 
-func ditheringTo1bpp(pixVal uint8) (uint8, int) {
-	if pixVal < 0 {
-		return 0, 0
-	} else if pixVal < 127 {
-		return 0, int(pixVal)
-	} else if pixVal < 255 {
-		return 255, int(pixVal) - 255
-	} else {
-		return 255, 0
-	}
-}
-func ditheringTo2bpp(pixVal uint8) (uint8, int) {
-	if pixVal <= 0 {
-		return 0, 0
-	} else if pixVal <= 31 {
-		return 0, int(pixVal)
-	} else if pixVal <= 95 {
-		return 85, int(pixVal) - 63
-	} else if pixVal <= 159 {
-		return 127, int(pixVal) - 127
-	} else if pixVal <= 223 {
-		return 191, int(pixVal) - 191
-	} else if pixVal < 255 {
-		return 255, int(pixVal) - 255
-	} else {
-		return 255, 0
-	}
-}
 func ditheringToNbpp(pixVal uint8, n float64) (uint8, int) {
 	numPoints := math.Pow(2, n) - 1 //Num of supported values
 	step := int(255 / numPoints)
