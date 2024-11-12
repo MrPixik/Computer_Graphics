@@ -71,23 +71,20 @@ func ditheringTo2bpp(pixVal uint8) (uint8, int) {
 	}
 }
 func ditheringToNbpp(pixVal uint8, n float64) (uint8, int) {
-	// Число точек квантования
-	numPoints := math.Pow(2, n) - 1
+	numPoints := math.Pow(2, n) - 1 //Num of supported values
 	step := int(255 / numPoints)
 	halfStep := uint8(step / 2)
-	intervalSlice := []uint8{}
+	intervalSlice := []uint8{} //Supported values for pixels
 
-	// Создание интервалов квантования
 	for i := 0; i <= 255; i += step {
 		intervalSlice = append(intervalSlice, uint8(i))
 	}
 
-	// Нахождение интервала, к которому принадлежит значение пикселя
+	// Finding interval for current pixel
 	for i := 0; i < len(intervalSlice)-1; i++ {
 		low := intervalSlice[i]
 		high := intervalSlice[i+1]
 
-		// Проверка, в какой интервал попадает пиксель
 		if pixVal >= low && pixVal < high {
 			quantizedVal := low
 			if pixVal-low > halfStep {
@@ -98,7 +95,7 @@ func ditheringToNbpp(pixVal uint8, n float64) (uint8, int) {
 		}
 	}
 
-	// Если пиксель равен 255, возвращаем верхний предел
+	// If pixVal == 255 return 255
 	return 255, 0
 }
 
