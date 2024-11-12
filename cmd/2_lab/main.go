@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"gocv.io/x/gocv"
 	"math"
 )
@@ -81,11 +82,11 @@ func clamp(value int) uint8 {
 	return uint8(value)
 }
 func ditheringFloydSteinberg() {
-	var originFilename = "..\\..\\static\\images\\2_lab\\Marcus_Aurelius.jpg"
-	var outputFilename = "..\\..\\static\\images\\2_lab\\Marcus_Aurelius_dithered_2bpp.jpg"
+	//var originFilename = "..\\..\\static\\images\\2_lab\\Marcus_Aurelius.jpg"
+	//var outputFilename = "..\\..\\static\\images\\2_lab\\Marcus_Aurelius_dithered_1bpp.png"
 
-	//var originFilename = "..\\..\\static\\images\\2_lab\\elephant.jpg"
-	//var outputFilename = "..\\..\\static\\images\\2_lab\\elephant_dithered_1bpp.jpg"
+	var originFilename = "..\\..\\static\\images\\2_lab\\elephant.jpg"
+	var outputFilename = "..\\..\\static\\images\\2_lab\\elephant_dithered_2bpp.png"
 
 	originImg := gocv.IMRead(originFilename, gocv.IMReadColor)
 	defer originImg.Close()
@@ -128,6 +129,21 @@ func ditheringFloydSteinberg() {
 			}
 		}
 	}
+	//Test for uniq pixel values
+	uniq := []uint8{processingData[0]}
+	for _, pixval := range processingData {
+		isUnique := true
+		for _, value := range uniq {
+			if value == pixval {
+				isUnique = false
+				break
+			}
+		}
+		if isUnique {
+			uniq = append(uniq, pixval)
+		}
+	}
+	fmt.Println(uniq)
 	ditheringImage := gocv.NewMatWithSize(height, wigth, gocv.MatTypeCV8U)
 	defer ditheringImage.Close()
 
