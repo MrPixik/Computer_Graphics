@@ -73,19 +73,20 @@ func ditheringToNbpp(pixVal uint8, n float64) (uint8, int) {
 }
 
 // clamp limiting value to interval [0,255]
-func clamp(value int) uint8 {
-	if value < 0 {
+func clamp(pixVal uint8, err int) uint8 {
+	var result int = int(pixVal) + err
+	if result < 0 {
 		return 0
-	} else if value > 255 {
+	} else if result > 255 {
 		return 255
 	}
-	return uint8(value)
+	return uint8(result)
 }
 func ditheringFloydSteinberg() {
 	//var originFilename = "..\\..\\static\\images\\2_lab\\Marcus_Aurelius.jpg"
-	//var outputFilename = "..\\..\\static\\images\\2_lab\\Marcus_Aurelius_dithered_1bpp.png"
+	//var outputFilename = "..\\..\\static\\images\\2_lab\\Marcus_Aurelius_dithered_2bpp.png"
 
-	var originFilename = "..\\..\\static\\images\\2_lab\\elephant.jpg"
+	var originFilename = "..\\..\\static\\images\\2_lab\\elephant.png"
 	var outputFilename = "..\\..\\static\\images\\2_lab\\elephant_dithered_2bpp.png"
 
 	originImg := gocv.IMRead(originFilename, gocv.IMReadColor)
@@ -105,27 +106,27 @@ func ditheringFloydSteinberg() {
 			currPixValResult, err := ditheringToNbpp(currPixVal, 2)
 			if (x < wigth-1) && (y < height-1) && (x > 0) {
 				processingData[index] = currPixValResult
-				processingData[index+1] += clamp((7 * err) / 16)
-				processingData[index+wigth-1] += clamp((3 * err) / 16)
-				processingData[index+wigth] += clamp((5 * err) / 16)
-				processingData[index+wigth+1] += clamp(err / 16)
+				processingData[index+1] = clamp(processingData[index+1], (7*err)/16)
+				processingData[index+wigth-1] = clamp(processingData[index+wigth-1], (3*err)/16)
+				processingData[index+wigth] = clamp(processingData[index+wigth], (5*err)/16)
+				processingData[index+wigth+1] = clamp(processingData[index+wigth+1], err/16)
 			} else if (x == 0) && (y == height-1) { //Lower left corner
 				processingData[index] = currPixValResult
-				processingData[index+1] += clamp(7 * err / 16)
+				processingData[index+1] = clamp(processingData[index+1], 7*err/16)
 			} else if (x == wigth-1) && (y == height-1) { //Lower right corner
 				processingData[index] = currPixValResult
 			} else if x == 0 { //Left border
 				processingData[index] = currPixValResult
-				processingData[index+1] += clamp(7 * err / 16)
-				processingData[index+wigth] += clamp(5 * err / 16)
-				processingData[index+wigth+1] += clamp(err / 16)
+				processingData[index+1] = clamp(processingData[index+1], 7*err/16)
+				processingData[index+wigth] = clamp(processingData[index+wigth], 5*err/16)
+				processingData[index+wigth+1] = clamp(processingData[index+wigth+1], err/16)
 			} else if x == wigth-1 { //Right border
 				processingData[index] = currPixValResult
-				processingData[index+wigth-1] += clamp(3 * err / 16)
-				processingData[index+wigth] += clamp(5 * err / 16)
+				processingData[index+wigth-1] = clamp(processingData[index+wigth-1], 3*err/16)
+				processingData[index+wigth] = clamp(processingData[index+wigth], 5*err/16)
 			} else if y == height-1 { //Low border
 				processingData[index] = currPixValResult
-				processingData[index+1] += clamp(7 * err / 16)
+				processingData[index+1] = clamp(processingData[index+1], 7*err/16)
 			}
 		}
 	}
