@@ -127,7 +127,7 @@ func ifIntersect(p1, p2, p3, p4 Point) bool {
 	o3 := orient(p3, p4, p1)
 	o4 := orient(p3, p4, p2)
 
-	// Общие условия пересечения
+	// Conditions of intersecting non-collinear segments
 	if o1 != o2 && o3 != o4 {
 		return true
 	}
