@@ -41,7 +41,6 @@ func bresenhamLineAlgorithm(img *gocv.Mat, p1, p2 Point) {
 		dirx = -1
 	}
 
-	// Основной цикл рисования линии
 	if dx > dy {
 		for x != p2.X {
 			drawPixel(img, Point{x, y})
@@ -64,7 +63,6 @@ func bresenhamLineAlgorithm(img *gocv.Mat, p1, p2 Point) {
 		}
 	}
 
-	// Рисуем последний пиксель в конце линии
 	drawPixel(img, p2)
 }
 
