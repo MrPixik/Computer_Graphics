@@ -6,7 +6,7 @@ import (
 	"math"
 )
 
-func myAbs(a int) int {
+func MyAbs(a int) int {
 	return int(math.Abs(float64(a)))
 }
 
@@ -16,62 +16,65 @@ type Point struct {
 
 func drawPixel(img *gocv.Mat, p Point) {
 	img.SetUCharAt(p.Y, p.X, 255)
+	//fmt.Printf("(%d, %d)\n", p.X, p.Y)
 }
 
-// bresenhamLineAlgorithm func realises Bresenham line algorithm taking into account diagonal, horizontal and vertical cases
-func bresenhamLineAlgorithm(img *gocv.Mat, p1, p2 Point) {
-	dx := myAbs(p2.X - p1.X)
-	dy := myAbs(p2.Y - p1.Y)
-
-	var err float64 = 0
-	var errStep float64
-	if dx > dy {
-		errStep = float64(dy) / float64(dx)
-	} else {
-		errStep = float64(dx) / float64(dy)
+// BresenhamLineAlgorithm func realises Bresenham line algorithm taking into account diagonal, horizontal and vertical cases
+func BresenhamLineAlgorithm(img *gocv.Mat, p1, p2 Point) {
+	if p1.X > p2.X {
+		p1, p2 = p2, p1
 	}
+	dx := MyAbs(p2.X - p1.X)
+	dy := MyAbs(p2.Y - p1.Y)
 
-	x, y := p1.X, p1.Y
-	diry := 1
-	if p2.Y < p1.Y {
-		diry = -1
-	}
-	dirx := 1
-	if p2.X < p1.X {
+	// Определение направления приращений по x и y
+	var dirx, diry int
+	if p2.X > p1.X {
+		dirx = 1
+	} else if p2.X < p1.X {
 		dirx = -1
 	}
 
-	if dx > dy {
-		for x != p2.X {
-			drawPixel(img, Point{x, y})
-			x += dirx
-			err += errStep
-			if err >= 0.5 {
-				y += diry
-				err -= 1
-			}
-		}
-	} else {
-		for y != p2.Y {
-			drawPixel(img, Point{x, y})
-			y += diry
-			err += errStep
-			if err >= 0.5 {
-				x += dirx
-				err -= 1
-			}
-		}
+	if p2.Y > p1.Y {
+		diry = 1
+	} else if p2.Y < p1.Y {
+		diry = -1
 	}
 
-	drawPixel(img, p2)
+	x, y := p1.X, p1.Y // Начальная точка
+
+	// Основная логика в зависимости от соотношения dx и dy
+	if dx >= dy { // Линия ближе к горизонтальной
+		err := 2*dy - dx // Инициализация ошибки с поправкой на половину пикселя
+		for i := 0; i <= dx; i++ {
+			drawPixel(img, Point{x, y}) // Рисуем текущий пиксель
+			x += dirx                   // Изменяем x на каждом шаге
+			if err >= 0 {
+				y += diry // Изменяем y, если ошибка >= 0
+				err -= 2 * dx
+			}
+			err += 2 * dy // Увеличиваем ошибку после каждого шага
+		}
+	} else { // Линия ближе к вертикальной
+		err := 2*dx - dy // Инициализация ошибки с поправкой на половину пикселя
+		for i := 0; i <= dy; i++ {
+			drawPixel(img, Point{x, y}) // Рисуем текущий пиксель
+			y += diry                   // Изменяем y на каждом шаге
+			if err >= 0 {
+				x += dirx // Изменяем x, если ошибка >= 0
+				err -= 2 * dy
+			}
+			err += 2 * dx // Увеличиваем ошибку после каждого шага
+		}
+	}
 }
 
-// drawPolygon func drawing polygon by points from slice of type Point
-func drawPolygon(img *gocv.Mat, points []Point) {
+// DrawPolygon func drawing polygon by points from slice of type Point
+func DrawPolygon(img *gocv.Mat, points []Point) {
 	for i := 1; i < len(points); i++ {
-		bresenhamLineAlgorithm(img, points[i-1], points[i])
+		BresenhamLineAlgorithm(img, points[i-1], points[i])
 	}
-	bresenhamLineAlgorithm(img, points[0], points[len(points)-1]) //connection of first and last points
+	BresenhamLineAlgorithm(img, points[0], points[len(points)-1]) //connection of first and last points
 }
 
 // vectorProduct func calculate vector product of vectors (p2,p1) and (p2,p3)
@@ -172,6 +175,7 @@ func isSelfIntersectingPolygon(points []Point) bool {
 	return false
 }
 func main() {
+
 	//Line drawing
 	var outputFilenameLine = "..\\..\\static\\images\\3_lab\\straight_line.png"
 	imgLine := gocv.NewMatWithSize(250, 250, gocv.MatTypeCV8U)
@@ -181,9 +185,11 @@ func main() {
 		Point{50, 100},
 		Point{150, 200},
 	}
-	bresenhamLineAlgorithm(&imgLine, pointsLine[0], pointsLine[1])
+	BresenhamLineAlgorithm(&imgLine, pointsLine[0], pointsLine[1])
 	gocv.IMWrite(outputFilenameLine, imgLine)
 
+	// Test for segment (0, 0) (8, 3)
+	DrawlineTest()
 	//Polygon drawing
 	var outputFilenamePolygonConvex = "..\\..\\static\\images\\3_lab\\PolygonConvex.png"
 	var outputFilenamePolygonNonConvex = "..\\..\\static\\images\\3_lab\\PolygonNonConvex.png"
@@ -198,33 +204,31 @@ func main() {
 	defer imgPolygonSelfIntersecting.Close()
 
 	pointsPolygonConvex := []Point{
-		Point{50, 50},
-		Point{200, 50},
-		Point{200, 150},
-		Point{150, 200},
-		Point{50, 200},
-		Point{0, 150},
+		{200, 230},
+		{50, 220},
+		{50, 100},
+		{100, 50},
+		{200, 50},
 	}
 	pointsPolygonNonConvex := []Point{
-		Point{50, 50},
-		Point{200, 50},
-		Point{200, 150},
-		Point{150, 100},
-		Point{50, 150},
-		Point{50, 100},
+		{50, 50},
+		{200, 50},
+		{200, 150},
+		{150, 100},
+		{50, 150},
+		{50, 100},
 	}
 	pointsPolygonSelfIntersecting := []Point{
-		Point{50, 50},
-		Point{200, 50},
-		Point{200, 150},
-		Point{150, 100},
-		Point{50, 150},
-		Point{100, 200},
+		{50, 50},
+		{200, 50},
+		{200, 150},
+		{150, 100},
+		{50, 150},
+		{100, 200},
 	}
-
-	drawPolygon(&imgPolygonConvex, pointsPolygonConvex)
-	drawPolygon(&imgPolygonNonConvex, pointsPolygonNonConvex)
-	drawPolygon(&imgPolygonSelfIntersecting, pointsPolygonSelfIntersecting)
+	DrawPolygon(&imgPolygonConvex, pointsPolygonConvex)
+	DrawPolygon(&imgPolygonNonConvex, pointsPolygonNonConvex)
+	DrawPolygon(&imgPolygonSelfIntersecting, pointsPolygonSelfIntersecting)
 
 	gocv.IMWrite(outputFilenamePolygonConvex, imgPolygonConvex)
 	gocv.IMWrite(outputFilenamePolygonNonConvex, imgPolygonNonConvex)
@@ -270,4 +274,46 @@ func main() {
 	} else {
 		fmt.Println("Polygon is non-self-intersected")
 	}
+
+	//Even-Odd method
+	var outputFilenamePolygonConvexPainted = "..\\..\\static\\images\\3_lab\\PolygonConvexEvenOdd.png"
+	var outputFilenamePolygonNonConvexPainted = "..\\..\\static\\images\\3_lab\\PolygonNonConvexEvenOdd.png"
+	var outputFilenamePolygonSelfIntersectingPainted = "..\\..\\static\\images\\3_lab\\PolygonSelfIntersectingEvenOdd.png"
+
+	imgPolygonConvexEvenOdd := gocv.NewMatWithSize(250, 250, gocv.MatTypeCV8U)
+	imgPolygonNonConvexEvenOdd := gocv.NewMatWithSize(250, 250, gocv.MatTypeCV8U)
+	imgPolygonSelfIntersectingEvenOdd := gocv.NewMatWithSize(250, 250, gocv.MatTypeCV8U)
+
+	defer imgPolygonConvexEvenOdd.Close()
+	defer imgPolygonNonConvexEvenOdd.Close()
+	defer imgPolygonSelfIntersectingEvenOdd.Close()
+
+	fillPolygonEvenOdd(&imgPolygonConvexEvenOdd, pointsPolygonConvex)
+	fillPolygonEvenOdd(&imgPolygonNonConvexEvenOdd, pointsPolygonNonConvex)
+	fillPolygonEvenOdd(&imgPolygonSelfIntersectingEvenOdd, pointsPolygonSelfIntersecting)
+
+	gocv.IMWrite(outputFilenamePolygonConvexPainted, imgPolygonConvexEvenOdd)
+	gocv.IMWrite(outputFilenamePolygonNonConvexPainted, imgPolygonNonConvexEvenOdd)
+	gocv.IMWrite(outputFilenamePolygonSelfIntersectingPainted, imgPolygonSelfIntersectingEvenOdd)
+
+	//Non-Zero Winding method
+	var outputFilenamePolygonConvexNonZeroWinding = "..\\..\\static\\images\\3_lab\\PolygonConvexNonZeroWinding.png"
+	var outputFilenamePolygonNonConvexNonZeroWinding = "..\\..\\static\\images\\3_lab\\PolygonNonConvexNonZeroWinding.png"
+	var outputFilenamePolygonSelfIntersectingNonZeroWinding = "..\\..\\static\\images\\3_lab\\PolygonSelfIntersectingNonZeroWinding.png"
+
+	imgPolygonConvexNonZeroWinding := gocv.NewMatWithSize(250, 250, gocv.MatTypeCV8U)
+	imgPolygonNonConvexNonZeroWinding := gocv.NewMatWithSize(250, 250, gocv.MatTypeCV8U)
+	imgPolygonSelfIntersectingNonZeroWinding := gocv.NewMatWithSize(250, 250, gocv.MatTypeCV8U)
+
+	defer imgPolygonConvexNonZeroWinding.Close()
+	defer imgPolygonNonConvexNonZeroWinding.Close()
+	defer imgPolygonSelfIntersectingNonZeroWinding.Close()
+
+	fillPolygonNonZeroWinding(&imgPolygonConvexNonZeroWinding, pointsPolygonConvex)
+	fillPolygonNonZeroWinding(&imgPolygonNonConvexNonZeroWinding, pointsPolygonNonConvex)
+	fillPolygonNonZeroWinding(&imgPolygonSelfIntersectingNonZeroWinding, pointsPolygonSelfIntersecting)
+
+	gocv.IMWrite(outputFilenamePolygonConvexNonZeroWinding, imgPolygonConvexNonZeroWinding)
+	gocv.IMWrite(outputFilenamePolygonNonConvexNonZeroWinding, imgPolygonNonConvexNonZeroWinding)
+	gocv.IMWrite(outputFilenamePolygonSelfIntersectingNonZeroWinding, imgPolygonSelfIntersectingNonZeroWinding)
 }
