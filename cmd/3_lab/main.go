@@ -194,14 +194,20 @@ func main() {
 	var outputFilenamePolygonConvex = "..\\..\\static\\images\\3_lab\\PolygonConvex.png"
 	var outputFilenamePolygonNonConvex = "..\\..\\static\\images\\3_lab\\PolygonNonConvex.png"
 	var outputFilenamePolygonSelfIntersecting = "..\\..\\static\\images\\3_lab\\PolygonSelfIntersecting.png"
+	var outputFilenamePolygonStar = "..\\..\\static\\images\\3_lab\\PolygonStar.png"
+	var outputFilenamePolygonExample = "..\\..\\static\\images\\3_lab\\PolygonExample.png"
 
 	imgPolygonConvex := gocv.NewMatWithSize(250, 250, gocv.MatTypeCV8U)
 	imgPolygonNonConvex := gocv.NewMatWithSize(250, 250, gocv.MatTypeCV8U)
 	imgPolygonSelfIntersecting := gocv.NewMatWithSize(250, 250, gocv.MatTypeCV8U)
+	imgPolygonStar := gocv.NewMatWithSize(250, 250, gocv.MatTypeCV8U)
+	imgPolygonExample := gocv.NewMatWithSize(250, 250, gocv.MatTypeCV8U)
 
 	defer imgPolygonConvex.Close()
 	defer imgPolygonNonConvex.Close()
 	defer imgPolygonSelfIntersecting.Close()
+	defer imgPolygonStar.Close()
+	defer imgPolygonExample.Close()
 
 	pointsPolygonConvex := []Point{
 		{200, 230},
@@ -226,13 +232,34 @@ func main() {
 		{50, 150},
 		{100, 200},
 	}
+	pointsPolygonStar := []Point{
+		{60, 220},
+		{125, 20},
+		{180, 220},
+		{20, 100},
+		{220, 100},
+	}
+	pointsPolygonExample := []Point{
+		{150, 20},  // A
+		{100, 220}, // B
+		{50, 110},  // C
+		{200, 60},  // D
+		{240, 180}, // E
+		{20, 180},  // F
+		{160, 110}, // G
+	}
+
 	DrawPolygon(&imgPolygonConvex, pointsPolygonConvex)
 	DrawPolygon(&imgPolygonNonConvex, pointsPolygonNonConvex)
 	DrawPolygon(&imgPolygonSelfIntersecting, pointsPolygonSelfIntersecting)
+	DrawPolygon(&imgPolygonStar, pointsPolygonStar)
+	DrawPolygon(&imgPolygonExample, pointsPolygonExample)
 
 	gocv.IMWrite(outputFilenamePolygonConvex, imgPolygonConvex)
 	gocv.IMWrite(outputFilenamePolygonNonConvex, imgPolygonNonConvex)
 	gocv.IMWrite(outputFilenamePolygonSelfIntersecting, imgPolygonSelfIntersecting)
+	gocv.IMWrite(outputFilenamePolygonStar, imgPolygonStar)
+	gocv.IMWrite(outputFilenamePolygonExample, imgPolygonExample)
 
 	//Checking polygon if polygon convex and self-intersected
 	//Convex
@@ -276,44 +303,34 @@ func main() {
 	}
 
 	//Even-Odd method
-	var outputFilenamePolygonConvexPainted = "..\\..\\static\\images\\3_lab\\PolygonConvexEvenOdd.png"
-	var outputFilenamePolygonNonConvexPainted = "..\\..\\static\\images\\3_lab\\PolygonNonConvexEvenOdd.png"
-	var outputFilenamePolygonSelfIntersectingPainted = "..\\..\\static\\images\\3_lab\\PolygonSelfIntersectingEvenOdd.png"
+	var outputFilenamePolygonStarPainted = "..\\..\\static\\images\\3_lab\\PolygonStarEvenOdd.png"
+	var outputFilenamePolygonExamplePainted = "..\\..\\static\\images\\3_lab\\PolygonExampleEvenOdd.png"
 
-	imgPolygonConvexEvenOdd := gocv.NewMatWithSize(250, 250, gocv.MatTypeCV8U)
-	imgPolygonNonConvexEvenOdd := gocv.NewMatWithSize(250, 250, gocv.MatTypeCV8U)
-	imgPolygonSelfIntersectingEvenOdd := gocv.NewMatWithSize(250, 250, gocv.MatTypeCV8U)
+	imgPolygonStarEvenOdd := gocv.NewMatWithSize(250, 250, gocv.MatTypeCV8U)
+	imgPolygonExampleEvenOdd := gocv.NewMatWithSize(250, 250, gocv.MatTypeCV8U)
 
-	defer imgPolygonConvexEvenOdd.Close()
-	defer imgPolygonNonConvexEvenOdd.Close()
-	defer imgPolygonSelfIntersectingEvenOdd.Close()
+	defer imgPolygonStarEvenOdd.Close()
+	defer imgPolygonExampleEvenOdd.Close()
 
-	fillPolygonEvenOdd(&imgPolygonConvexEvenOdd, pointsPolygonConvex)
-	fillPolygonEvenOdd(&imgPolygonNonConvexEvenOdd, pointsPolygonNonConvex)
-	fillPolygonEvenOdd(&imgPolygonSelfIntersectingEvenOdd, pointsPolygonSelfIntersecting)
+	fillPolygonEvenOdd(&imgPolygonStarEvenOdd, pointsPolygonStar)
+	fillPolygonEvenOdd(&imgPolygonExampleEvenOdd, pointsPolygonExample)
 
-	gocv.IMWrite(outputFilenamePolygonConvexPainted, imgPolygonConvexEvenOdd)
-	gocv.IMWrite(outputFilenamePolygonNonConvexPainted, imgPolygonNonConvexEvenOdd)
-	gocv.IMWrite(outputFilenamePolygonSelfIntersectingPainted, imgPolygonSelfIntersectingEvenOdd)
+	gocv.IMWrite(outputFilenamePolygonStarPainted, imgPolygonStarEvenOdd)
+	gocv.IMWrite(outputFilenamePolygonExamplePainted, imgPolygonExampleEvenOdd)
 
 	//Non-Zero Winding method
-	var outputFilenamePolygonConvexNonZeroWinding = "..\\..\\static\\images\\3_lab\\PolygonConvexNonZeroWinding.png"
-	var outputFilenamePolygonNonConvexNonZeroWinding = "..\\..\\static\\images\\3_lab\\PolygonNonConvexNonZeroWinding.png"
-	var outputFilenamePolygonSelfIntersectingNonZeroWinding = "..\\..\\static\\images\\3_lab\\PolygonSelfIntersectingNonZeroWinding.png"
+	var outputFilenamePolygonStarNonZeroWinding = "..\\..\\static\\images\\3_lab\\PolygonStarNonZeroWinding.png"
+	var outputFilenamePolygonExampleNonZeroWinding = "..\\..\\static\\images\\3_lab\\PolygonExampleNonZeroWinding.png"
 
-	imgPolygonConvexNonZeroWinding := gocv.NewMatWithSize(250, 250, gocv.MatTypeCV8U)
-	imgPolygonNonConvexNonZeroWinding := gocv.NewMatWithSize(250, 250, gocv.MatTypeCV8U)
-	imgPolygonSelfIntersectingNonZeroWinding := gocv.NewMatWithSize(250, 250, gocv.MatTypeCV8U)
+	imgPolygonStarNonZeroWinding := gocv.NewMatWithSize(250, 250, gocv.MatTypeCV8U)
+	imgPolygonExampleNonZeroWinding := gocv.NewMatWithSize(250, 250, gocv.MatTypeCV8U)
 
-	defer imgPolygonConvexNonZeroWinding.Close()
-	defer imgPolygonNonConvexNonZeroWinding.Close()
-	defer imgPolygonSelfIntersectingNonZeroWinding.Close()
+	defer imgPolygonStarNonZeroWinding.Close()
+	defer imgPolygonExampleNonZeroWinding.Close()
 
-	fillPolygonNonZeroWinding(&imgPolygonConvexNonZeroWinding, pointsPolygonConvex)
-	fillPolygonNonZeroWinding(&imgPolygonNonConvexNonZeroWinding, pointsPolygonNonConvex)
-	fillPolygonNonZeroWinding(&imgPolygonSelfIntersectingNonZeroWinding, pointsPolygonSelfIntersecting)
+	fillPolygonNonZeroWinding(&imgPolygonStarNonZeroWinding, pointsPolygonStar)
+	fillPolygonNonZeroWinding(&imgPolygonExampleNonZeroWinding, pointsPolygonExample)
 
-	gocv.IMWrite(outputFilenamePolygonConvexNonZeroWinding, imgPolygonConvexNonZeroWinding)
-	gocv.IMWrite(outputFilenamePolygonNonConvexNonZeroWinding, imgPolygonNonConvexNonZeroWinding)
-	gocv.IMWrite(outputFilenamePolygonSelfIntersectingNonZeroWinding, imgPolygonSelfIntersectingNonZeroWinding)
+	gocv.IMWrite(outputFilenamePolygonStarNonZeroWinding, imgPolygonStarNonZeroWinding)
+	gocv.IMWrite(outputFilenamePolygonExampleNonZeroWinding, imgPolygonExampleNonZeroWinding)
 }
