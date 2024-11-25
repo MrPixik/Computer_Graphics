@@ -5,6 +5,7 @@ import (
 	"gocv.io/x/gocv"
 )
 
+// BezierCurveThirdOrder plots Bezier curve by 3 points
 func BezierCurveThirdOrder(img *gocv.Mat, p1, p2, p3 utils.Point, step float64) []utils.Point {
 	segment1 := utils.Segment{
 		X1: p1.X, X2: p2.X, Y1: p1.Y, Y2: p2.Y,
