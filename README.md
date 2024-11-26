@@ -37,10 +37,10 @@ Computer_Graphics/
 │   │
 ├── static/
 │   ├── images/                    # Images used for testing and visualization
-│       ├── lab1/                  # Output images from Lab 1
-│       ├── lab2/                  # Output images from Lab 2
-│       ├── lab3/                  # Output images from Lab 3
-│       ├── lab4/                  # Output images from Lab 4
+│       ├── lab1/                 
+│       ├── lab2/                  
+│       ├── lab3/                  
+│       ├── lab4/                  
 │
 ├── go.mod                         # Go module definition
 ```

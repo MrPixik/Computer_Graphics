@@ -6,9 +6,29 @@ import (
 	"math"
 )
 
+// polygonOrientation checks if polygon is oriented counter-clockwise.  Returns true if CCW, false otherwise.
+func polygonOrientation(polygon []utils.Point) bool {
+	signedArea := 0
+	for i := 0; i < len(polygon); i++ {
+		signedArea += (polygon[i].X * polygon[(i+1)%len(polygon)].Y) - (polygon[(i+1)%len(polygon)].X * polygon[i].Y)
+	}
+	return signedArea < 0
+}
+
+// reversePolygon reverses the order of points in the polygon.
+func reversePolygon(polygon []utils.Point) []utils.Point {
+	for i, j := 0, len(polygon)-1; i < j; i, j = i+1, j-1 {
+		polygon[i], polygon[j] = polygon[j], polygon[i]
+	}
+	return polygon
+}
+
 // Cyrus_Beck_Algorithm performs line clipping using the Cyrus-Beck algorithm.
 func Cyrus_Beck_Algorithm(p1, p2 utils.Point, polygon []utils.Point) (utils.Segment, error) {
-
+	// Ensure counter-clockwise orientation
+	if !polygonOrientation(polygon) {
+		polygon = reversePolygon(polygon)
+	}
 	segment := utils.Segment{
 		X1: p1.X,
 		X2: p2.X,
@@ -52,13 +72,13 @@ func Cyrus_Beck_Algorithm(p1, p2 utils.Point, polygon []utils.Point) (utils.Segm
 
 		param := float64(-scalarWN) / float64(scalarDN)
 
-		if param > 0 && param < 1 {
-			if scalarDN < 0 {
-				paramEnter = math.Max(paramEnter, param)
-			} else {
-				paramExit = math.Min(paramExit, param)
-			}
+		//if param > 0 && param < 1 {
+		if scalarDN > 0 {
+			paramEnter = math.Max(paramEnter, param)
+		} else {
+			paramExit = math.Min(paramExit, param)
 		}
+		//}
 	}
 
 	if paramEnter > paramExit { // the segment lies outside the polygon

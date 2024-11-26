@@ -6,16 +6,16 @@ import (
 )
 
 // BezierCurveThirdOrder plots Bezier curve by 3 points
-func BezierCurveThirdOrder(img *gocv.Mat, p1, p2, p3 utils.Point, step float64) []utils.Point {
+func BezierCurveThirdOrder(img *gocv.Mat, p1, p2, p3 utils.Point, numPoints int) []utils.Point {
 	segment1 := utils.Segment{
 		X1: p1.X, X2: p2.X, Y1: p1.Y, Y2: p2.Y,
 	}
 	segment2 := utils.Segment{
 		X1: p2.X, X2: p3.X, Y1: p2.Y, Y2: p3.Y,
 	}
-	var currParamValue float64
 	var points []utils.Point
-	for ; currParamValue < 1; currParamValue += step {
+	for i := 0; i < numPoints; i++ {
+		currParamValue := float64(i) / float64(numPoints-1)
 		point1 := segment1.GetCoordinatesByParam(currParamValue)
 		point2 := segment2.GetCoordinatesByParam(currParamValue)
 
