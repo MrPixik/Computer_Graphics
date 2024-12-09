@@ -72,13 +72,11 @@ func Cyrus_Beck_Algorithm(p1, p2 utils.Point, polygon []utils.Point) (utils.Segm
 
 		param := float64(-scalarWN) / float64(scalarDN)
 
-		//if param > 0 && param < 1 {
 		if scalarDN > 0 {
 			paramEnter = math.Max(paramEnter, param)
 		} else {
 			paramExit = math.Min(paramExit, param)
 		}
-		//}
 	}
 
 	if paramEnter > paramExit { // the segment lies outside the polygon

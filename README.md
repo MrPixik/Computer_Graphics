@@ -28,11 +28,16 @@ Computer_Graphics/
 │   │   │   ├── cyrus_beck_algorithm.go # Cyrus-Beck line clipping algorithm
 │   │   │   ├── main.go            # Main entry point for Lab 4
 │   │   │
+│   │   ├── lab5/                  # Lab 5 - Algorithms for 3D processing 
+│   │   │   ├── del_inviz_lines.go    # Deleting invisible lines of  3D figure
+│   │   │   ├── perspective_projection.go # Perspective projection
+│   │   │   ├── point_rotation.go # Functions for point rotations
+│   │   │   ├── main.go            # Main entry point for Lab 5
+│   │   │
 │   ├── utils/
 │   │   ├── utils.go               # Shared utility functions and structures
 │   │
-│   ├── main/
-│   │   ├── line_test.txt          # Test cases for line drawing algorithms
+│   ├── main/         # Test cases for line drawing algorithms
 │   │   ├── main.go                # Main entry point for running all labs
 │   │
 ├── static/
@@ -40,7 +45,8 @@ Computer_Graphics/
 │       ├── lab1/                 
 │       ├── lab2/                  
 │       ├── lab3/                  
-│       ├── lab4/                  
+│       ├── lab4/       
+│       ├── lab5/            
 │
 ├── go.mod                         # Go module definition
 ```
@@ -57,6 +63,11 @@ Polygon Filling: Implements algorithms to fill polygons using scan-line techniqu
 ### Lab 4 - Advanced Algorithms
 Bézier Curves: Draws smooth curves using the Bézier curve algorithm.
 Cyrus-Beck Clipping: Clips a line segment to a convex polygon using the Cyrus-Beck algorithm.
+### Lab 5 - Algorithms for 3D processing
+Construction of a parallel projection of a rotated parallelepiped onto the plane Z= 0.
+Construction of a one-point perspective projection of a rotated parallelepiped.
+Removal of invisible edges of the "wire" model of the parallelepiped.
+Animation of the parallelepiped for both types of projections.
 
 ## Installation
 
