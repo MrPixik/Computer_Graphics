@@ -101,7 +101,7 @@ func Run() {
 	} else {
 		fmt.Println("Polygon is non-convex")
 	}
-	if isSelfIntersectingPolygon(pointsPolygonConvex) {
+	if IsSelfIntersectingPolygon(pointsPolygonConvex) {
 		fmt.Println("Polygon is self-intersected")
 	} else {
 		fmt.Println("Polygon is non-self-intersected")
@@ -114,7 +114,7 @@ func Run() {
 	} else {
 		fmt.Println("Polygon is non-convex")
 	}
-	if isSelfIntersectingPolygon(pointsPolygonNonConvex) {
+	if IsSelfIntersectingPolygon(pointsPolygonNonConvex) {
 		fmt.Println("Polygon is self-intersected")
 	} else {
 		fmt.Println("Polygon is non-self-intersected")
@@ -128,7 +128,7 @@ func Run() {
 		fmt.Println("Polygon is non-convex")
 	}
 
-	if isSelfIntersectingPolygon(pointsPolygonSelfIntersecting) {
+	if IsSelfIntersectingPolygon(pointsPolygonSelfIntersecting) {
 		fmt.Println("Polygon is self-intersected")
 	} else {
 		fmt.Println("Polygon is non-self-intersected")

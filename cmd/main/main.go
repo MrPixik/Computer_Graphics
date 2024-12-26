@@ -1,8 +1,6 @@
 package main
 
-import (
-	"Computer_Graphics/cmd/labs/lab5"
-)
+import "Computer_Graphics/cmd/labs/bdz"
 
 func main() {
 	//// 1 lab
@@ -18,6 +16,9 @@ func main() {
 	//lab4.Run()
 
 	//lab5
-	lab5.Run()
+	//lab5.Run()
+
+	//BDZ
+	bdz.Run()
 
 }

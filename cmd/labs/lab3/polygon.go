@@ -144,8 +144,8 @@ func ifIntersect(p1, p2, p3, p4 utils.Point) bool {
 	return false
 }
 
-// isSelfIntersectingPolygon func checks if polygon is self intersected
-func isSelfIntersectingPolygon(points []utils.Point) bool {
+// IsSelfIntersectingPolygon func checks if polygon is self intersected
+func IsSelfIntersectingPolygon(points []utils.Point) bool {
 	n := len(points)
 	for i := 0; i < n; i++ {
 		for j := i + 2; j < n; j++ {
