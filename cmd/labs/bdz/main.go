@@ -3,7 +3,6 @@ package bdz
 import (
 	"Computer_Graphics/cmd/labs/lab3"
 	"Computer_Graphics/cmd/labs/utils"
-	"fmt"
 	"gocv.io/x/gocv"
 )
 
@@ -29,11 +28,7 @@ func firstTask() {
 	lab3.DrawPolygon(&imgPolygon, pointsPolygon)
 
 	gocv.IMWrite(outputFilenamePolygon, imgPolygon)
-	if lab3.IsSelfIntersectingPolygon(pointsPolygon) {
-		fmt.Println("Polygon is self-intersected")
-	} else {
-		fmt.Println("Polygon is non-self-intersected")
-	}
+
 	// Рисуем выпуклую оболочку
 	var outputFilenameConvexHull = "..\\..\\static\\images\\bdz\\ConvexHull.png"
 
@@ -48,6 +43,36 @@ func firstTask() {
 	gocv.IMWrite(outputFilenameConvexHull, imgConvexHull)
 }
 
+func secondTask() {
+	var outputFilename = "..\\..\\static\\images\\bdz\\HermiteCurve.png"
+
+	img1 := gocv.NewMatWithSize(1000, 1000, gocv.MatTypeCV8U)
+
+	defer img1.Close()
+
+	points := []utils.Point{
+		{250, 250},
+		{450, 550},
+		{750, 350},
+		{950, 650},
+	}
+	vectors := []utils.Point{
+		{100, 100},
+		{200, -100},
+		{100, 200},
+		{0, -100},
+	}
+	drawCompositeHermiteCurve(&img1, points, vectors)
+
+	gocv.IMWrite(outputFilename, img1)
+}
+
 func Run() {
-	firstTask()
+	//Напишите программу, которая находит полигон, который является внешним контуром
+	//полигона с самопересечениями. Исходный и получившийся полигоны выведите на экран.
+	//firstTask()
+
+	//Напишите программу, которая строит составную кубическую кривую Эрмита. Вершины,
+	//через которые проходит кривая, и направляющие вектора задаются отдельными массивами.
+	secondTask()
 }
