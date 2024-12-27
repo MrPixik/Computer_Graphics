@@ -1,6 +1,7 @@
 package bdz
 
 import (
+	"Computer_Graphics/cmd/labs/lab3"
 	"Computer_Graphics/cmd/labs/utils"
 	"gocv.io/x/gocv"
 )
@@ -16,15 +17,20 @@ func calculateCoordinate(p1, p2, v1, v2 utils.Point, t float64) utils.Point {
 }
 func drawHermiteCurve(img *gocv.Mat, p1, p2, v1, v2 utils.Point) {
 	t := 0.0
-
+	prevPoint := p1
+	var currPoint utils.Point
 	for {
 		if t > 1.0 {
 			break
 		}
-		currPoint := calculateCoordinate(p1, p2, v1, v2, t)
-		utils.DrawPixel(img, currPoint)
+		currPoint = calculateCoordinate(p1, p2, v1, v2, t)
+		//utils.DrawPixel(img, currPoint)
+		lab3.BresenhamLineAlgorithm(img, prevPoint, currPoint)
+		prevPoint = currPoint
+
 		t += 0.01
 	}
+	lab3.BresenhamLineAlgorithm(img, currPoint, p2)
 }
 
 func drawCompositeHermiteCurve(img *gocv.Mat, points []utils.Point, vectors []utils.Point) {
