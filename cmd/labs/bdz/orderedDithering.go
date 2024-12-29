@@ -98,7 +98,6 @@ func orderedDithering() {
 
 	processingData, _ := grayImg.DataPtrUint8()
 
-	// Матрица Байера 8x8, нормализованная в диапазон [0, 254]
 	bayerMatrix := [8][8]int{
 		{0, 32, 8, 40, 2, 34, 10, 42},
 		{48, 16, 56, 24, 50, 18, 58, 26},
@@ -117,14 +116,13 @@ func orderedDithering() {
 			currPixValResult, _ := ditheringToNbpp(currPixVal, 2)
 			processingData[index] = currPixValResult
 
-			// Порог из матрицы Байера
+			// Применение порога
 			threshold := bayerMatrix[y%8][x%8] * 255 / 63
 
-			// Применение порога
 			if int(currPixValResult) > threshold {
-				processingData[index] = 255 // белый пиксель
+				processingData[index] = 255
 			} else {
-				processingData[index] = 0 // черный пиксель
+				processingData[index] = 0
 			}
 		}
 	}
