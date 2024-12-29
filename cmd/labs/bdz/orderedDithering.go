@@ -86,7 +86,7 @@ func orderedDithering() {
 	//var outputFilename = "..\\..\\static\\images\\lab2\\Marcus_Aurelius_dithered_2bpp.png"
 
 	var originFilename = "..\\..\\static\\images\\bdz\\elephant.png"
-	var outputFilename = "..\\..\\static\\images\\bdz\\elephant_dithered_4bpp.png"
+	var outputFilename = "..\\..\\static\\images\\bdz\\elephant_dithered_2bpp.png"
 
 	originImg := gocv.IMRead(originFilename, gocv.IMReadColor)
 	defer originImg.Close()
@@ -98,34 +98,33 @@ func orderedDithering() {
 
 	processingData, _ := grayImg.DataPtrUint8()
 
+	// Матрица Байера 8x8, нормализованная в диапазон [0, 254]
+	bayerMatrix := [8][8]int{
+		{0, 32, 8, 40, 2, 34, 10, 42},
+		{48, 16, 56, 24, 50, 18, 58, 26},
+		{12, 44, 4, 36, 14, 46, 6, 38},
+		{60, 28, 52, 20, 62, 30, 54, 22},
+		{3, 35, 11, 43, 1, 33, 9, 41},
+		{51, 19, 59, 27, 49, 17, 57, 25},
+		{15, 47, 7, 39, 13, 45, 5, 37},
+		{63, 31, 55, 23, 61, 29, 53, 21},
+	}
+
 	for y := 0; y < height; y++ {
 		for x := 0; x < wigth; x++ {
 			index := wigth*y + x
 			currPixVal := processingData[index]
-			currPixValResult, _ := ditheringToNbpp(currPixVal, 4)
-			if (x < wigth-1) && (y < height-1) && (x > 0) {
-				processingData[index] = currPixValResult
-				processingData[index+1] = clamp(processingData[index+1], 15)
-				processingData[index+wigth-1] = clamp(processingData[index+wigth-1], 25)
-				processingData[index+wigth] = clamp(processingData[index+wigth], -20)
-				processingData[index+wigth+1] = clamp(processingData[index+wigth+1], 5)
-			} else if (x == 0) && (y == height-1) { //Lower left corner
-				processingData[index] = currPixValResult
-				processingData[index+1] = clamp(processingData[index+1], 15)
-			} else if (x == wigth-1) && (y == height-1) { //Lower right corner
-				processingData[index] = currPixValResult
-			} else if x == 0 { //Left border
-				processingData[index] = currPixValResult
-				processingData[index+1] = clamp(processingData[index+1], 15)
-				processingData[index+wigth] = clamp(processingData[index+wigth], -20)
-				processingData[index+wigth+1] = clamp(processingData[index+wigth+1], 5)
-			} else if x == wigth-1 { //Right border
-				processingData[index] = currPixValResult
-				processingData[index+wigth-1] = clamp(processingData[index+wigth-1], 25)
-				processingData[index+wigth] = clamp(processingData[index+wigth], -20)
-			} else if y == height-1 { //Low border
-				processingData[index] = currPixValResult
-				processingData[index+1] = clamp(processingData[index+1], 15)
+			currPixValResult, _ := ditheringToNbpp(currPixVal, 2)
+			processingData[index] = currPixValResult
+
+			// Порог из матрицы Байера
+			threshold := bayerMatrix[y%8][x%8] * 255 / 63
+
+			// Применение порога
+			if int(currPixValResult) > threshold {
+				processingData[index] = 255 // белый пиксель
+			} else {
+				processingData[index] = 0 // черный пиксель
 			}
 		}
 	}
